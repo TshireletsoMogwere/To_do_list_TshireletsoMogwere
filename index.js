@@ -1,37 +1,61 @@
-// Get references to the input field, button, and item list
-const itemInput = document.getElementById("itemInput");
-const addButton = document.getElementById("addItems");
-const itemList = document.getElementById("itemList");
+document.addEventListener('DOMContentLoaded', function() {
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
 
+    // Load tasks from localStorage
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-function addItemToList () {
+    // Render tasks from localStorage
+    tasks.forEach(task => {
+      renderTask(task);
+    });
 
-const itemInput = document.getElementById("itemInput");
-const itemList = document.getElementById("itemList");
-}
- 
-addButton.addEventListener('click', () => {
-    // Get the value of the input field
-    const itemText = itemInput.value.trim();
-    
-    // Check if the input field is not empty
-    if (itemText !== "") {
-        // Create a new list item element
-        const newItem = document.createElement("div");
-        newItem.textContent = itemText;
-        
-        // Append the new item to the item list
-        itemList.appendChild(newItem);
-        
-        // Clear the input field
-        itemInput.value = "";
-    } else {
-        // If the input field is empty, show an alert
-        alert("Please enter a valid item!");
+    addTaskBtn.addEventListener('click', function() {
+      const taskText = taskInput.value.trim();
+      if (taskText !== '') {
+        const task = {
+          text: taskText,
+          done: false
+        };
+        tasks.push(task);
+        renderTask(task);
+        saveTasks();
+        taskInput.value = '';
+      }
+    });
+
+    function renderTask(task) {
+      const li = document.createElement('li');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = task.done;
+      const textSpan = document.createElement('span');
+      textSpan.textContent = task.text;
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+
+      checkbox.addEventListener('change', function() {
+        task.done = checkbox.checked;
+        saveTasks();
+      });
+
+      deleteBtn.addEventListener('click', function() {
+        const index = tasks.indexOf(task);
+        if (index !== -1) {
+          tasks.splice(index, 1);
+          li.remove();
+          saveTasks();
+        }
+      });
+
+      li.appendChild(checkbox);
+      li.appendChild(textSpan);
+      li.appendChild(deleteBtn);
+      taskList.appendChild(li);
     }
-})
 
- 
- 
-
-
+    function saveTasks() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+  });

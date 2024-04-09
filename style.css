@@ -8,7 +8,7 @@ body {
     text-align: center;
 }
 
-#itemInput {
+#taskInput {
     border: none;
     border-radius: 10px;
     height: 50px;
@@ -19,7 +19,7 @@ body {
     -o-border-radius: 10px;
 }
 
-#addItems {
+#addTask {
     border: none;
     border-radius: 10px;
     height: 50px;
